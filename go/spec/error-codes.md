@@ -38,6 +38,7 @@ and the range. Wording is not compared; see [error presentation](error-presentat
 | `CHK0501` | conversion | unsupported | A declaration with no equivalent in the other surface. |
 | `CHK0502` | conversion | ambiguous | A YAML declaration that maps to more than one form. |
 | `CHK0601` | scope | outside alpha | Grammar the language defines but the alpha does not accept. |
+| `CHK0602` | scope | below USD card minimum | An operation price is below the $0.50 USD card minimum. |
 
 ## Ranges
 

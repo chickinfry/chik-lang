@@ -19,6 +19,7 @@ const (
 	NodeRoutesBlock     NodeKind = "RoutesBlock"
 	NodeService         NodeKind = "Service"
 	NodeOperation       NodeKind = "Operation"
+	NodeOperationPrice  NodeKind = "OperationPrice"
 	NodeParam           NodeKind = "Param"
 	NodeResult          NodeKind = "Result"
 	NodeField           NodeKind = "Field"

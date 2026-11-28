@@ -367,6 +367,7 @@ func (p *parser) service() *Node {
 func (p *parser) operation(path string) *Node {
 	start := p.next()
 	operation := &Node{Kind: NodeOperation, Name: start.Text}
+	pricePath := path + ".operations." + start.Text + ".price"
 	path = path + "." + start.Text
 	p.expect("(", path)
 	for p.at().Kind == Ident {
@@ -403,6 +404,9 @@ func (p *parser) operation(path string) *Node {
 		p.expect("}", path)
 		result.Range = nodeRange(recordStart, recordEnd)
 		operation.Children = append(operation.Children, result)
+		if p.atIdent("price") && p.at().Line == recordEnd.Line {
+			operation.Children = append(operation.Children, p.operationPrice(pricePath))
+		}
 	}
 	operation.Range = nodeRange(start, p.tokens[p.pos-1])
 	p.endEntry(path)

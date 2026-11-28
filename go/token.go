@@ -118,5 +118,6 @@ const (
 	// CodeOutsideBeta reports grammar the language defines but the beta does
 	// not accept. A beta file must not depend on a construct the next release
 	// could change without notice.
-	CodeOutsideBeta = "CHK0601"
+	CodeOutsideBeta         = "CHK0601"
+	CodeBelowUSDCardMinimum = "CHK0602"
 )

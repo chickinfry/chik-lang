@@ -182,12 +182,16 @@ func (s *server) diagnosticsFor(uri string) []Diagnostic {
 	report := chiklang.Report(file)
 	diagnostics := make([]Diagnostic, 0, len(report.Diagnostics))
 	for _, entry := range report.Diagnostics {
+		severity := 1
+		if entry.Severity == "warning" {
+			severity = 2
+		}
 		diagnostics = append(diagnostics, Diagnostic{
 			Range: Range{
 				Start: doc.position(entry.Range.Start.Line, entry.Range.Start.Column),
 				End:   doc.position(entry.Range.End.Line, entry.Range.End.Column),
 			},
-			Severity:   1,
+			Severity:   severity,
 			Code:       entry.Code,
 			Source:     "chik",
 			Message:    entry.Message,

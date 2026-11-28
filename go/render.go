@@ -340,6 +340,9 @@ func renderServices(file *File, out *strings.Builder, block *Node, types map[str
 						return err
 					}
 					fmt.Fprintf(out, "          %s: %s\n", part.Name, withOptional(value, part.Optional))
+				case NodeOperationPrice:
+					return &Error{Diagnostics: []Diagnostic{operationPriceUnavailable(part, file.Path)},
+						Sources: map[string]string{file.Path: file.Source}}
 				case NodeResult:
 					if len(part.Children) == 0 {
 						continue

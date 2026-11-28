@@ -184,6 +184,11 @@ var wordings = []wording{
 		Notes: []string{"the alpha covers exactly what chik/*.yml declares today"},
 		Body:  "The grammar defines this construct, but the alpha does not accept it.\n\nThe alpha ships the language for the declarations YAML already expresses. A later release adds routes, custom addresses, unions, and Page, together with their YAML form. The extensions block is retired: its one setting moved to project.capabilities.",
 	},
+	{
+		Code: CodeBelowUSDCardMinimum,
+		Help: "use at least 0.50 usd for card payments",
+		Body: "The declared amount is below the minimum for USD card payments. Changing it does not enable unreleased operation prices.",
+	},
 }
 
 // LookupExplanation returns the published description of a number.
