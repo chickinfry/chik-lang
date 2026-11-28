@@ -273,3 +273,10 @@ func TestCapabilitiesMustBeANamedMap(t *testing.T) {
 		t.Fatalf("a capability list was accepted: %v", err)
 	}
 }
+
+func TestToYAMLRefusesUnreleasedOperationPrice(t *testing.T) {
+	file := Parse("api.chik", "services { catalog { operations { search() -> {} price 0.50 usd } } }")
+	if output, err := ToYAML(file); err == nil || !strings.Contains(err.Error(), "price") || len(output) != 0 {
+		t.Fatalf("priced operation must not render as a free one: output=%q, error=%v", output, err)
+	}
+}

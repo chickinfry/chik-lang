@@ -14,6 +14,7 @@ func TestConvertRefusesLoss(t *testing.T) {
 		{"input default", "api", "services:\n  s:\n    operations:\n      o:\n        input:\n          a: {type: string, optional: true, default: \"x\"}\n", "default"},
 		{"public selector", "api", "services:\n  s:\n    operations:\n      o:\n        public: true\n", "public"},
 		{"operation method", "api", "services:\n  s:\n    operations:\n      o:\n        method: GET\n", "method"},
+		{name: "operation price", role: "api", source: "services:\n  s:\n    operations:\n      o:\n        price: { amount: 0.50, currency: usd }\n", want: "price"},
 		{"not a mapping", "project", "- one\n", "not a mapping"},
 	}
 	for _, test := range cases {

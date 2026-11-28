@@ -90,6 +90,9 @@ func (c *convertCheck) walk(node *yaml.Node, path string, context apiMapping) {
 			if path == "" {
 				child = entry.name
 			}
+			if context == apiOperation && entry.name == "price" {
+				c.refuse(child, operationPriceUnavailableMessage)
+			}
 			if context == apiOperation || context == apiField {
 				c.checkKey(entry.name, child, entry.node)
 			}

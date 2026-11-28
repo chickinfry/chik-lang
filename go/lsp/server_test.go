@@ -223,3 +223,45 @@ func TestUnknownRequestGetsAnErrorReply(t *testing.T) {
 		t.Errorf("error code = %d, want -32601", replies[0].Error.Code)
 	}
 }
+
+func TestOpenDiagnosesOperationPrices(t *testing.T) {
+	for _, test := range []struct {
+		name     string
+		price    string
+		message  string
+		severity int
+	}{
+		{name: "exact minimum", price: "0.50 usd", message: "not supported", severity: 1},
+		{name: "exactly below minimum", price: "0.49999999999999999999 usd", message: "$0.50", severity: 2},
+		{name: "invalid number", price: "0.5.0 usd", message: "positive decimal", severity: 1},
+		{name: "invalid currency", price: "0.50 uSd", message: "lowercase currency", severity: 1},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			source := "services { catalog { operations { search() -> {} price " + test.price + " } } }"
+			open := fmt.Sprintf(`{"jsonrpc":"2.0","method":"textDocument/didOpen","params":{"textDocument":{"uri":"file:///p/chik/api.chik","version":1,"text":%q}}}`, source)
+			replies := run(t, open)
+			if len(replies) != 1 || replies[0].Method != "textDocument/publishDiagnostics" {
+				t.Fatalf("replies = %+v", replies)
+			}
+			var params struct {
+				Diagnostics []Diagnostic `json:"diagnostics"`
+			}
+			if err := json.Unmarshal(replies[0].Params, &params); err != nil {
+				t.Fatal(err)
+			}
+			found := false
+			for _, diagnostic := range params.Diagnostics {
+				if diagnostic.Severity == test.severity && strings.Contains(diagnostic.Message, test.message) &&
+					strings.Contains(diagnostic.Path, "services.catalog.operations.search.price") {
+					found = true
+				}
+				if test.name == "exact minimum" && diagnostic.Severity == 2 {
+					t.Errorf("minimum payment unexpectedly warned: %+v", diagnostic)
+				}
+			}
+			if !found {
+				t.Fatalf("missing price diagnostic for %q: %+v", test.price, params.Diagnostics)
+			}
+		})
+	}
+}
